@@ -72,7 +72,7 @@ def main():
     query = f"SELECT {fields} FROM users;"
     log_info = get_logger()
     connection = get_db()
-    
+
     with connection.cursor() as c:
         c.execute(query)
         rows = c.fetchall()
