@@ -14,11 +14,8 @@ def filter_datum(fields: List[str], redaction: str, message: str,
                  separator: str) -> str:
     """Replacing field value with redaction string"""
     for f in fields:
-        pattern = re.sub(
-            f+"=.*?"+separator, f+"="+redaction+separator, message
-        )
-
-    return pattern
+        patn = re.sub(f+"=.*?"+separator, f+"="+redaction+separator, message)
+    return patn
 
 
 class RedactingFormatter(logging.Formatter):
