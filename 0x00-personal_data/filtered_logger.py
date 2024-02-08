@@ -13,9 +13,10 @@ PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 def filter_datum(fields: List[str], redaction: str, message: str,
                  separator: str) -> str:
     """Replacing field value with redaction string"""
-    for f in fields:
-        patn = re.sub(f+"=.*?"+separator, f+"="+redaction+separator, message)
-    return patn
+    for field in fields:
+        message = re.sub(field+"=.*?"+separator,
+                         field+"="+redaction+separator, message)
+    return message
 
 
 class RedactingFormatter(logging.Formatter):
