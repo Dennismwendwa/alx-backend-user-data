@@ -69,7 +69,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
 def main():
     """This function connects to db and gets dat from users table"""
     fields = "name,email,phone,ssn,password,ip,last_login,user_agent"
-    columns = fields.split(,)
+    columns = fields.split(",")
     query = f"SELECT {fields} FROM users;"
     log_info = get_logger()
     connection = get_db()
@@ -81,7 +81,7 @@ def main():
             records_data = map(
                 lambda k: f"{k[0]}, {k[1]}", zip(columns, r),
             )
-            message = f"{'; '.join(list(records_data)}"
+            message = f"{'; '.join(list(records_data))}"
             args = ("user_data", logging.INFO, None, None, message,
                     None, None)
             loggs = logging.LogRecord(*args)
