@@ -7,7 +7,7 @@ from typing import List, TypeVar
 class Auth:
     """class auth for base authentication"""
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """method require
+        """method require"""
 
         if path is None or excluded_paths is None or len(excluded_paths) == 0:
             return True
@@ -29,6 +29,7 @@ class Auth:
                 if re.match(pattern, path):
                     return False
             return true
+        """
 
     def authorization_header(self, request=None) -> str:
         """method authorized"""
