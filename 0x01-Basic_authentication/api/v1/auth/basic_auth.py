@@ -5,6 +5,7 @@ from typing import Tuple, TypeVar
 import re
 import base64
 import binascii
+from models.user import User
 
 
 class BasicAuth(Auth):
@@ -46,3 +47,28 @@ class BasicAuth(Auth):
                 user_password = full_match.group("password")
                 return current_user, user_password
         return None, None
+
+    def user_object_from_credentials(self,
+                                     user_email: str,
+                                     user_pwd: str) -> TypeVar('User'):
+        """This method constructs user instance from credentials supplied"""
+        if isinstance(user_email, str) and isinstance(user_pwd, str):
+            try:
+                user = User.search({"email": user_email})
+            except Exception as e:
+                return None
+            if len(user) <= 0:
+                return None
+            if user[0].is_valid_password(user_pwd):
+                return user[0]
+        return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """Getting the current user from request object"""
+        header = self.authorization_header(request)
+        b64_token = self.extract_base64_authorization_header(header)
+        string_token = self.decode_base64_authorization_header(b64_token)
+        usr_email, usr_password = self.extract_user_credentials(string_token)
+        
+        user = self.user_object_from_credentials(usr_email, usr_password)
+        return user
