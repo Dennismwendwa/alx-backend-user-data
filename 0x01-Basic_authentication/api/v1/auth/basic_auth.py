@@ -69,6 +69,6 @@ class BasicAuth(Auth):
         b64_token = self.extract_base64_authorization_header(header)
         string_token = self.decode_base64_authorization_header(b64_token)
         usr_email, usr_password = self.extract_user_credentials(string_token)
-        
+
         user = self.user_object_from_credentials(usr_email, usr_password)
         return user
