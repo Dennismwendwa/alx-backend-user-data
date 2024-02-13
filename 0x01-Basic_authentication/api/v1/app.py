@@ -33,7 +33,7 @@ def before_request():
                      "/api/v1/unauthorized/",
                      "/api/v1/forbidden/"]
 
-    if auth.require_auth(request.path,      
+    if auth.require_auth(request.path,
                          exclude_paths):
         auth_header = auth.authorization_header(request)
         current_user = auth.current_user(request)
@@ -62,7 +62,6 @@ def forbidden_error(error) -> str:
     Raises forbbiden error view
     """
     return jsonify({"error": "Forbidden"}), 403
-
 
 
 if __name__ == "__main__":
