@@ -13,8 +13,14 @@ class Auth:
             return True
 
         path = path.rstrip("/")
-        excluded_paths = [p.rstrip("/") for p in excluded_paths]
-        return path not in excluded_paths
+        
+        for excluded_path in excluded_paths:
+            excluded_path = excluded_path.rstrip("/")
+            if excluded_path.endswith("*") and path.startswith(excluded_path[:-1]):
+                return False
+            elif path == excluded_path:
+                return False
+        return True
         """
         if path is not None and excluded_paths is not None:
             for exc_p in map(lambda k: k.strip(), excluded_paths):
