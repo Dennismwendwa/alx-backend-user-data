@@ -71,4 +71,7 @@ class BasicAuth(Auth):
         usr_email, usr_password = self.extract_user_credentials(string_token)
 
         user = self.user_object_from_credentials(usr_email, usr_password)
+        print()
+        print(user)
+        print()
         return user
