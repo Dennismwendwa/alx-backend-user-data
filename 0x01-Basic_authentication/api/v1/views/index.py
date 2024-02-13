@@ -33,3 +33,10 @@ def unauthorized_endpoint() -> None:
       - api status code
     """
     abort(401)
+
+
+@app_views.route("/forbidden/", strict_slashes=False)
+def forbidden() -> str:
+    """Forbidden view
+    Return: the endpoint status"""
+    abort(403)
