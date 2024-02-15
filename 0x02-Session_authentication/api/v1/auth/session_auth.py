@@ -21,3 +21,8 @@ class SessionAuth(Auth):
         """This method takes session id and returns the user id"""
         if isinstance(session_id, str):
             return self.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None) -> User:
+        """This method gets the current user from the session"""
+        user_id = self.user_id_for_session_id(self.session_cookie(request))
+        return User.get(user_id)
