@@ -6,6 +6,7 @@ from models.user import User
 from api.v1.views import app_views
 from os import getenv
 
+
 @app_views.route("/auth_session/login", methods=["POST"], strict_slashes=False)
 def user_login() -> Tuple[str, int]:
     """This view is for user login"""
