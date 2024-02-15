@@ -42,7 +42,7 @@ class SessionExpAuth(SessionAuth):
             else:
                 return None
 
-            if time < current_time:
+            if expire_date < current_time:
                 return None
 
             return session["user_id"]
