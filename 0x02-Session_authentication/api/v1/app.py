@@ -14,9 +14,18 @@ app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
-auth = Auth()
+auth = None
+auth_type = getenv("AUTH_TYPE", "auth")
 
-if getenv("AUTH_TYPE") == "session_auth":
+if auth_type == "auth":
+    from api.v1.auth.auth import Auth
+    auth == Auth()
+
+if auth_type == "basic_auth":
+    from api.v1.auth.basic_auth import BasichAuth
+    auth == BasicAuth()
+
+if auth_type == "session_auth":
     from api.v1.auth.session_auth import SessionAuth
     auth = SessionAuth()
 
@@ -29,7 +38,8 @@ def before_request():
 
     exclude_paths = ["/api/v1/status/",
                      "/api/v1/unauthorized/",
-                     "/api/v1/forbidden/"]
+                     "/api/v1/forbidden/",
+                     "/api/v1/auth_session/login/"]
 
     is_authenticated = auth.require_auth(request.path, exclude_paths)
     if is_authenticated:
