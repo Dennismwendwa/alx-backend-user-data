@@ -35,7 +35,7 @@ class SessionDBAuth(SessionExpAuth):
         last_time = session[0].created_at + time
 
         if last_time < current_time:
-           return None
+            return None
 
         return session[0].user_id
 

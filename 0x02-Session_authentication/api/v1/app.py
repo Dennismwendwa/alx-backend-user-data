@@ -37,7 +37,6 @@ if auth_type == "session_exp_auth":
 if auth_type == "session_db_auth":
     auth = SessionDBAuth()
 
-print(auth)
 
 @app.before_request
 def before_request():
