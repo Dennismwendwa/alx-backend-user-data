@@ -16,7 +16,7 @@ class User(Base):
     session_id = Column(String(250), nullable=True)
     reset_token = Column(String(250), nullable=True)
 
-    def __repr__str(self):
+    def __repr__(self):
         """This method is used for debugging and development"""
         return (f"<User(id={self.id}, email={self.email}, "
                 f"hashed_password={self.hashed_password}, "
