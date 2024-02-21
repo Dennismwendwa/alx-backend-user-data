@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """DB module
 """
 from sqlalchemy import create_engine
@@ -40,7 +41,6 @@ class DB:
             self._session.add(user)
             self._session.commit()
             return user
-
 
     def find_user_by(self, **kwargs) -> Union[User, None]:
         """
