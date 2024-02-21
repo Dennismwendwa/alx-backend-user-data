@@ -44,7 +44,7 @@ class DB:
             self._session.commit()
             return user
 
-    def find_user_by(self, **kwargs) -> Union[User, None]:
+    def find_user_by(self, **kwargs) -> User:
         """
         This methods search the User model for user
         with supplied attributes
