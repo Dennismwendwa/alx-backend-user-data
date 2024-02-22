@@ -27,37 +27,39 @@ def register_users():
         return jsonify({"message": "email already registered"}), 400
 
 
-@app.route("/sessions", methods=["POST", "DELETE"], strict_slashes=False)
+@app.route("/sessions", methods=["POST"], strict_slashes=False)
 def login_logout():
     """This route is for user login"""
-    if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
+    email = request.form.get("email")
+    password = request.form.get("password")
 
-        try:
-            if AUTH.valid_login(email, password):
-                session_id = AUTH.create_session(email)
+    try:
+        if AUTH.valid_login(email, password):
+            session_id = AUTH.create_session(email)
 
-                response = make_response(
-                    jsonify({"email": email, "message": "logged in"}))
-                response.set_cookie("session_id", session_id)
-                return response
-            else:
-                abort(401)
-        except Exception:
+            response = make_response(
+                jsonify({"email": email, "message": "logged in"}))
+            response.set_cookie("session_id", session_id)
+            return response
+        else:
             abort(401)
+    except Exception:
+        abort(401)
 
-    elif request.method == "DELETE":
-        session_id = request.cookies.get("session_id")
 
-        try:
-            user = AUTH._db.find_user_by(session_id=session_id)
-            if user:
-                AUTH.destroy_session(user.id)
-                return redirect("/")
-            abort(403)
-        except Exception:
-            abort(403)
+@app.route("/sessions", methods=["DELETE"], strict_slashes=False)
+def logout():
+    """This route logout users"""
+    session_id = request.cookies.get("session_id")
+
+    try:
+        user = AUTH._db.find_user_by(session_id=session_id)
+        if user:
+            AUTH.destroy_session(user.id)
+            return redirect("/")
+        abort(403)
+    except Exception:
+        abort(403)
 
 
 @app.route("/profile", methods=["GET"], strict_slashes=False)
