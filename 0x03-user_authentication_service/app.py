@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, jsonify, request, make_response, abort
+from flask import Flask, jsonify, request, make_response, abort, redirect
 from auth import Auth
 
 app = Flask(__name__)
@@ -25,24 +25,34 @@ def register_users():
         return jsonify({"message": "email already registered"}), 400
 
 
-@app.route("/sessions", methods=["POST"], strict_slashes=False)
-def login():
+@app.route("/sessions", methods=["POST", "DELETE"], strict_slashes=False)
+def login_logout():
     """This route is for user login"""
-    email = request.form.get("email")
-    password = request.form.get("password")
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
 
-    try:
-        if AUTH.valid_login(email, password):
-            session_id = AUTH.create_session(email)
+        try:
+            if AUTH.valid_login(email, password):
+                session_id = AUTH.create_session(email)
 
-            response = make_response(
-                jsonify({"email": email, "message": "logged in"}))
-            response.set_cookie("session_id", session_id)
-            return response
-        else:
+                response = make_response(
+                    jsonify({"email": email, "message": "logged in"}))
+                response.set_cookie("session_id", session_id)
+                return response
+            else:
+                abort(401)
+        except Exception:
             abort(401)
-    except Exception:
-        abort(401)
+    elif request.method == "DELETE":
+        session_id = request.cookies.get("session_id")
+
+        try:
+            user = AUTH.find_user_by(session_id=session_id)
+            AUTH.destroy_session(user.id)
+            return redirect("/")
+        except Exception as e:
+            return make_response(f"Error: {str(e)}", 403)
 
 
 if __name__ == "__main__":

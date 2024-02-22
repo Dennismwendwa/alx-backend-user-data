@@ -3,6 +3,7 @@
 import bcrypt
 import uuid
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 from db import DB
 from user import User
 
@@ -56,3 +57,28 @@ class Auth:
             return session_id
         except NoResultFound:
             return None
+
+    def get_user_from_session_id(session_id: str) ->Union[User, None]:
+        """This method finds user by session_id"""
+        if session_id is None:
+            return None
+        if isinstance(session_id, str):
+            try:
+                existing_user = self._db.find_user_by(session_id=session_id)
+                return existing_user
+            except NoResultFound:
+                return None
+            except InvalidRequestError:
+                return None
+
+    def destroy_session(user_id: int) -> None:
+        """This method destroys user sessions"""
+        if isinstance(user_id, int):
+            try:
+                existing_user = self._db.update_user(user_id, session_id=None)
+                return None
+            except ValueError as e:
+                raise e
+            except InvalidRequestError as e:
+                raise e
+                
