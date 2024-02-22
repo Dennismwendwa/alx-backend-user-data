@@ -43,18 +43,20 @@ def login_logout():
                 return response
             else:
                 abort(401)
-        except Exception as e:
-            print("error", e)
+        except Exception:
             abort(401)
+
     elif request.method == "DELETE":
         session_id = request.cookies.get("session_id")
 
         try:
             user = AUTH._db.find_user_by(session_id=session_id)
-            AUTH.destroy_session(user.id)
-            return redirect("/")
-        except Exception as e:
-            return make_response(f"Error: {str(e)}", 403)
+            if user:
+                AUTH.destroy_session(user.id)
+                return redirect("/")
+            abort(403)
+        except Exception:
+            abort(403)
 
 
 @app.route("/profile", methods=["GET"], strict_slashes=False)
