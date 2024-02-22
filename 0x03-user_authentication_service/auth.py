@@ -2,6 +2,7 @@
 """This is auth module"""
 import bcrypt
 import uuid
+from typing import Union
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 from db import DB
@@ -58,7 +59,7 @@ class Auth:
         except NoResultFound:
             return None
 
-    def get_user_from_session_id(session_id: str) ->Union[User, None]:
+    def get_user_from_session_id(self, session_id: str) -> Union[User, None]:
         """This method finds user by session_id"""
         if session_id is None:
             return None
@@ -71,7 +72,7 @@ class Auth:
             except InvalidRequestError:
                 return None
 
-    def destroy_session(user_id: int) -> None:
+    def destroy_session(self, user_id: int) -> None:
         """This method destroys user sessions"""
         if isinstance(user_id, int):
             try:
@@ -81,4 +82,3 @@ class Auth:
                 raise e
             except InvalidRequestError as e:
                 raise e
-                

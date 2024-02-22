@@ -2,6 +2,7 @@
 from flask import Flask, jsonify, request, make_response, abort, redirect
 from auth import Auth
 
+
 app = Flask(__name__)
 AUTH = Auth()
 
@@ -42,17 +43,34 @@ def login_logout():
                 return response
             else:
                 abort(401)
-        except Exception:
+        except Exception as e:
+            print("error", e)
             abort(401)
     elif request.method == "DELETE":
         session_id = request.cookies.get("session_id")
 
         try:
-            user = AUTH.find_user_by(session_id=session_id)
+            user = AUTH._db.find_user_by(session_id=session_id)
             AUTH.destroy_session(user.id)
             return redirect("/")
         except Exception as e:
             return make_response(f"Error: {str(e)}", 403)
+
+
+@app.route("/profile", methods=["GET"], strict_slashes=False)
+def profile():
+    """This route is for user profile"""
+    session_id = request.cookies.get("session_id")
+
+    try:
+        user = AUTH.get_user_from_session_id(session_id)
+        if user:
+            response_data = {"email": user.email}
+            return jsonify(response_data), 200
+        else:
+            abort(403)
+    except Exception as e:
+        return make_response(f"Error: {str(e)}", 403)
 
 
 if __name__ == "__main__":
