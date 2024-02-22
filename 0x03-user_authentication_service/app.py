@@ -51,12 +51,12 @@ def login_logout():
         session_id = request.cookies.get("session_id")
 
         try:
-            user = AUTH._db.find_user_by(session_id=session_id)
-            if user:
+            user = AUTH.get_user_from_session_id(session_id)
+            if user is not None:
                 AUTH.destroy_session(user.id)
                 return redirect("/")
             abort(403)
-        except Exception:
+        except Exception as e:
             abort(403)
 
 
